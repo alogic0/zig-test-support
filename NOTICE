@@ -1,0 +1,4 @@
+This package contains neutral native acceptance helpers authored from ownership
+and behavior contracts. It does not include application datasets or scenarios.
+The zig-process dependency is fetched separately and retains its own MIT
+license and notices. Upstream: https://github.com/alogic0/zig-process

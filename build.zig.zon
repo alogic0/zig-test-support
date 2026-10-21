@@ -1,0 +1,11 @@
+.{
+    .name = .test_support,
+    .version = "0.1.0",
+    .fingerprint = 0x5c453f6dcab1f159,
+    .minimum_zig_version = "0.17.0",
+    .dependencies = .{ .process = .{
+        .url = "git+https://github.com/alogic0/zig-process.git#4826a4973b20b65ded5f0fb79d5eb49694024398",
+        .hash = "process-0.5.1-BnTYqEE4AgB9ILj1BL2rdfggzRIWzFNVP7lO_MFvVZl8",
+    } },
+    .paths = .{ "build.zig", "build.zig.zon", ".zigversion", "src", "tests", "examples", "README.md", "DESIGN.md", "LICENSE", "NOTICE", "CHANGELOG.md" },
+}

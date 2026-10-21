@@ -1,0 +1,31 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        optimize: [Debug, ReleaseSafe]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29
+        with:
+          version: 0.17.0
+      - run: test "$(zig version)" = "$(cat .zigversion)"
+      - run: zig fmt --check build.zig build.zig.zon src tests examples
+      - run: zig build test example -Doptimize=${{ matrix.optimize }} --summary all
+      - name: Isolated immutable package consumer
+        shell: bash
+        run: |
+          consumer_dir=$(mktemp -d)
+          git archive --format=tar.gz HEAD > "$consumer_dir/provider.tar.gz"
+          cp tests/package/* "$consumer_dir/"
+          cd "$consumer_dir"
+          export ZIG_GLOBAL_CACHE_DIR="$consumer_dir/cache"
+          zig fetch --save=test_support ./provider.tar.gz
+          zig build test -Doptimize=${{ matrix.optimize }} --summary all

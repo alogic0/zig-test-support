@@ -1,0 +1,8 @@
+.{
+    .name = .support_package_consumer,
+    .version = "0.0.0",
+    .fingerprint = 0x6bf2022cd2c8e968,
+    .minimum_zig_version = "0.17.0",
+    .dependencies = .{},
+    .paths = .{ "build.zig", "build.zig.zon", "main.zig" },
+}
