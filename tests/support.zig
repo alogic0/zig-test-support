@@ -2,6 +2,9 @@ const std = @import("std");
 const S = @import("test_support");
 const t = std.testing;
 const Io = std.Io;
+test {
+    _ = @import("helpers.zig");
+}
 fn fixture(a: std.mem.Allocator) ![:0]u8 {
     return Io.Dir.cwd().realPathFileAlloc(t.io, @import("test_options").fixture, a);
 }

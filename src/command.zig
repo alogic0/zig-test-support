@@ -3,6 +3,8 @@ const std = @import("std");
 const P = @import("process");
 const Io = std.Io;
 const A = std.mem.Allocator;
+pub const FileWithProcess = @import("file_command.zig").WithProcess;
+pub const File = FileWithProcess(P);
 pub const Options = struct { run: P.RunOptions, stdin: ?[]const u8 = null };
 pub fn code(term: P.Child.Term) i32 {
     return switch (term) {

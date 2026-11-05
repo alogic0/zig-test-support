@@ -19,13 +19,15 @@ jobs:
       - run: test "$(zig version)" = "$(cat .zigversion)"
       - run: zig fmt --check build.zig build.zig.zon src tests examples
       - run: zig build test example -Doptimize=${{ matrix.optimize }} --summary all
-      - name: Isolated immutable package consumer
+      - name: Isolated pinned source consumer
         shell: bash
         run: |
           consumer_dir=$(mktemp -d)
-          git archive --format=tar.gz HEAD > "$consumer_dir/provider.tar.gz"
+          trap 'rm -r -- "$consumer_dir"' EXIT
+          mkdir "$consumer_dir/provider"
+          git ls-files -z | xargs -0 cp --parents --target-directory="$consumer_dir/provider"
           cp tests/package/* "$consumer_dir/"
+          sed -i 's|\.dependencies = .{},|.dependencies = .{ .test_support = .{ .path = "provider" } },|' "$consumer_dir/build.zig.zon"
           cd "$consumer_dir"
           export ZIG_GLOBAL_CACHE_DIR="$consumer_dir/cache"
-          zig fetch --save=test_support ./provider.tar.gz
           zig build test -Doptimize=${{ matrix.optimize }} --summary all
